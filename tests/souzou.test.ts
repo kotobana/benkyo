@@ -58,3 +58,18 @@ test('STAGES_DATA has 3 stages with valid flaws and good/bad UI definitions', ()
 
   assert.equal(allFlawIds.size, 12, 'Should have exactly 12 unique flaws across all stages');
 });
+
+test('UIUX_MARP_MARKDOWN is valid Marp format and parseMarpSlides extracts slides', async () => {
+  const { UIUX_MARP_MARKDOWN, parseMarpSlides } = await import('../src/apps/souzou/uiux/slidesMarp.ts');
+  assert.ok(UIUX_MARP_MARKDOWN.includes('marp: true'), 'Marp markdown must include marp: true frontmatter');
+  assert.ok(UIUX_MARP_MARKDOWN.includes('theme: default'), 'Marp markdown must include theme: default');
+
+  const slides = parseMarpSlides(UIUX_MARP_MARKDOWN);
+  assert.ok(slides.length >= 10, `Expected at least 10 parsed Marp slides, got ${slides.length}`);
+
+  slides.forEach((s, idx) => {
+    assert.equal(s.index, idx);
+    assert.ok(s.title, `Slide ${idx} must have a title`);
+    assert.ok(s.content.length > 0, `Slide ${idx} content cannot be empty`);
+  });
+});

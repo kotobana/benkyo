@@ -24,28 +24,18 @@ const KanjiApp = React.lazy(() =>
   import('./apps/kanji/KanjiApp').then(m => ({ default: m.KanjiApp }))
 );
 
-const SouzouHub = React.lazy(() => 
-  import('./apps/souzou/SouzouHub').then(m => ({ default: m.SouzouHub }))
-);
-
-const UiUxSlideDeck = React.lazy(() => 
-  import('./apps/souzou/uiux/UiUxSlideDeck').then(m => ({ default: m.UiUxSlideDeck }))
-);
-
-const UiUxGame = React.lazy(() => 
-  import('./apps/souzou/uiux/UiUxGame').then(m => ({ default: m.UiUxGame }))
+const SouzouApp = React.lazy(() => 
+  import('./apps/souzou/SouzouApp').then(m => ({ default: m.SouzouApp }))
 );
 
 const STORAGE_KEY = 'benkyo_passphrase';
 
-export type ViewState = 'portal' | 'kanji' | 'souzou-hub' | 'souzou-slides' | 'souzou-game';
+export type ViewState = 'portal' | 'kanji' | 'souzou';
 
 function getHashView(): ViewState {
   const hash = window.location.hash;
   if (hash === '#kanji') return 'kanji';
-  if (hash === '#souzou') return 'souzou-hub';
-  if (hash === '#souzou-slides') return 'souzou-slides';
-  if (hash === '#souzou-game') return 'souzou-game';
+  if (hash.startsWith('#souzou')) return 'souzou';
   return 'portal';
 }
 
@@ -75,9 +65,7 @@ export function App() {
   const navigateTo = (newView: ViewState) => {
     setView(newView);
     if (newView === 'kanji') window.location.hash = '#kanji';
-    else if (newView === 'souzou-hub') window.location.hash = '#souzou';
-    else if (newView === 'souzou-slides') window.location.hash = '#souzou-slides';
-    else if (newView === 'souzou-game') window.location.hash = '#souzou-game';
+    else if (newView === 'souzou') window.location.hash = '#souzou';
     else window.location.hash = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -198,8 +186,19 @@ export function App() {
     );
   }
 
-  // If Souzou Hub view is active
-  if (view === 'souzou-hub') {
+  // If Souzou App view is active (創造学習アプリ)
+  if (view === 'souzou') {
+    const isDemoPage = window.location.hash.includes('/demo/');
+
+    // 本物の独立デモサイトの場合、外枠フレームやヘッダーなしの完全独立全画面で開く！
+    if (isDemoPage) {
+      return (
+        <React.Suspense fallback={<div className="loading-box" style={{ padding: '60px', textAlign: 'center' }}>デモWebサイトを読み込み中…</div>}>
+          <SouzouApp onBackToPortal={() => navigateTo('portal')} />
+        </React.Suspense>
+      );
+    }
+
     return (
       <div className="space-shell">
         <header>
@@ -215,78 +214,14 @@ export function App() {
           </div>
         </header>
 
-        <div className="space-content" style={{ maxWidth: '980px' }}>
-          <React.Suspense fallback={<div className="loading-box" style={{ padding: '40px', textAlign: 'center' }}>創造学習ポータルを読み込み中…</div>}>
-            <SouzouHub 
-              onBack={() => navigateTo('portal')}
-              onOpenSlides={() => navigateTo('souzou-slides')}
-              onOpenGame={() => navigateTo('souzou-game')}
-            />
-          </React.Suspense>
-        </div>
+        <React.Suspense fallback={<div className="loading-box" style={{ padding: '40px', textAlign: 'center' }}>創造学習アプリを読み込み中…</div>}>
+          <SouzouApp onBackToPortal={() => navigateTo('portal')} />
+        </React.Suspense>
 
         <footer>
           <span>benkyo - 無料塾ポータル & 創造学習</span>
           <small>誰でも利用可能</small>
         </footer>
-      </div>
-    );
-  }
-
-  // If Slide Deck view is active
-  if (view === 'souzou-slides') {
-    return (
-      <div className="space-shell" style={{ background: '#f4f7f4' }}>
-        <header>
-          <div className="brand" style={{ cursor: 'pointer' }} onClick={() => navigateTo('souzou-hub')}>
-            <Compass size={24} />
-            <span>創造学習</span>
-            <small>第1回 UI/UXってなに？</small>
-          </div>
-          <div className="auth-controls">
-            <button className="quiet" onClick={() => navigateTo('souzou-hub')}>
-              テーマ一覧へ戻る
-            </button>
-          </div>
-        </header>
-
-        <div className="space-content" style={{ maxWidth: '1080px', padding: '24px 20px 40px' }}>
-          <React.Suspense fallback={<div className="loading-box" style={{ padding: '40px', textAlign: 'center' }}>スライド講義を読み込み中…</div>}>
-            <UiUxSlideDeck 
-              onBack={() => navigateTo('souzou-hub')}
-              onLaunchGame={() => navigateTo('souzou-game')}
-            />
-          </React.Suspense>
-        </div>
-      </div>
-    );
-  }
-
-  // If Game view is active
-  if (view === 'souzou-game') {
-    return (
-      <div className="space-shell" style={{ background: '#f0f3f1' }}>
-        <header>
-          <div className="brand" style={{ cursor: 'pointer' }} onClick={() => navigateTo('souzou-hub')}>
-            <Gamepad2 size={24} />
-            <span>クソUI脱出ゲーム</span>
-            <small>神UI見比べ体験</small>
-          </div>
-          <div className="auth-controls">
-            <button className="quiet" onClick={() => navigateTo('souzou-hub')}>
-              テーマ一覧へ戻る
-            </button>
-          </div>
-        </header>
-
-        <div className="space-content" style={{ maxWidth: '980px', padding: '24px 20px 40px' }}>
-          <React.Suspense fallback={<div className="loading-box" style={{ padding: '40px', textAlign: 'center' }}>ゲームを読み込み中…</div>}>
-            <UiUxGame 
-              onBack={() => navigateTo('souzou-hub')}
-              onOpenSlides={() => navigateTo('souzou-slides')}
-            />
-          </React.Suspense>
-        </div>
       </div>
     );
   }
@@ -365,24 +300,20 @@ export function App() {
                       <Compass size={26} />
                     </div>
                     <div className="app-card-title-group">
-                      <span className="badge-tag" style={{ background: '#fef3e7', color: '#b06000' }}>探究学習（月1回・50分枠）</span>
-                      <h3>創造学習: UI/UXってなに？</h3>
+                      <span className="badge-tag" style={{ background: '#fef3e7', color: '#b06000' }}>月1回・50分探究プログラム</span>
+                      <h3>創造学習（そうぞうがくしゅう）</h3>
                     </div>
                   </div>
                   <p>
-                    中学生向け探究ワークショップ！<br />
-                    「直感2択クイズ（講義15分）」と、わざと使いにくいサイトから脱出する「クソUI間違い探し＆神UI見比べ（ゲーム30分）」で、身近なデザインの仕組みを楽しく学びます。
+                    中学生向け探究型学習プログラム集！<br />
+                    身近なテクノロジーやデザインの仕組みを、直感クイズや本物の独立デモWebサイトで解き明かすシリーズです。
+                    第1回「UI/UXってなに？」を公開中。テーマごとのMarpスライドと独立デモサイトを収録。
                   </p>
                 </div>
-                <div className="app-card-footer" style={{ gap: '8px', flexWrap: 'wrap' }}>
-                  <button className="app-launch-btn" style={{ background: '#315e4d' }} onClick={() => navigateTo('souzou-slides')}>
-                    <Presentation size={14} style={{ marginRight: 4 }} /> スライド講義
-                  </button>
-                  <button className="app-launch-btn" style={{ background: '#f38b43' }} onClick={() => navigateTo('souzou-game')}>
-                    <Gamepad2 size={14} style={{ marginRight: 4 }} /> ゲーム起動
-                  </button>
-                  <button className="app-launch-btn secondary" onClick={() => navigateTo('souzou-hub')}>
-                    テーマ一覧 <ChevronRight size={14} />
+                <div className="app-card-footer">
+                  <span className="app-card-meta">第1回: UI/UX 公開中 / テーマ別アーカイブ</span>
+                  <button className="app-launch-btn" style={{ background: '#f38b43' }} onClick={() => navigateTo('souzou')}>
+                    アプリを開く <ChevronRight size={15} />
                   </button>
                 </div>
               </div>

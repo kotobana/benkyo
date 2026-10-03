@@ -16,21 +16,23 @@ import {
 } from 'lucide-react';
 
 interface SouzouHubProps {
-  onBack: () => void;
-  onOpenSlides: () => void;
-  onOpenGame: () => void;
+  onBackToPortal: () => void;
+  onSelectTheme: (themeId: string) => void;
+  onQuickOpenSlides?: () => void;
+  onQuickOpenGame?: () => void;
 }
 
 export const SouzouHub: React.FC<SouzouHubProps> = ({
-  onBack,
-  onOpenSlides,
-  onOpenGame
+  onBackToPortal,
+  onSelectTheme,
+  onQuickOpenSlides,
+  onQuickOpenGame
 }) => {
   return (
     <div className="souzou-hub-container">
       {/* Navigation Header */}
       <div className="souzou-hub-nav">
-        <button className="souzou-back-btn" onClick={onBack}>
+        <button className="souzou-back-btn" onClick={onBackToPortal}>
           <ArrowLeft size={16} /> ポータルへ戻る
         </button>
         <span className="souzou-tag">月1回 50分探究プログラム</span>
@@ -46,7 +48,7 @@ export const SouzouHub: React.FC<SouzouHubProps> = ({
           <h1>「なぜ？」から広がる、<br />テクノロジーとデザインの探究</h1>
           <p>
             中学生向けに月1回・50分枠で実施する探究型ワークショップです。<br />
-            難しい勉強ではなく、「直感クイズ」と「グループ対抗ゲーム」で、<br />
+            難しい勉強ではなく、「直感クイズ」と「本物の独立Webサイト」で、<br />
             身近なスマホやアプリの仕組みを楽しく解き明かします。
           </p>
         </div>
@@ -65,7 +67,7 @@ export const SouzouHub: React.FC<SouzouHubProps> = ({
           <Users size={20} className="guide-icon" />
           <div>
             <strong>授業スタイル</strong>
-            <p>大画面でスライド講義 ＋ 班ごとにタブレットでゲーム</p>
+            <p>大画面でMarpスライド ＋ 班ごとにタブレットで独立Webサイト</p>
           </div>
         </div>
         <div className="guide-item">
@@ -98,7 +100,7 @@ export const SouzouHub: React.FC<SouzouHubProps> = ({
             <p className="lesson-desc">
               「UI＝見た目やボタン」「UX＝使ったときの気持ち」。<br />
               身近な家電やゲームの画面を通じて、どうしてデザインが人の行動を左右するのかを学びます。
-              「クソUI脱出ゲーム」でわざと使いにくいサイトを体験し、神UIとの違いを発見しよう！
+              Marpスライド講義と、本物の独立Webサイト（クソUI vs 神UI）を体験しよう！
             </p>
           </div>
 
@@ -114,7 +116,7 @@ export const SouzouHub: React.FC<SouzouHubProps> = ({
             <div className="flow-step">
               <div className="flow-step-num">2</div>
               <div className="flow-step-body">
-                <strong>ゲーム（30分）: クソUI間違い探し</strong>
+                <strong>体験（30分）: 独立デモサイト</strong>
                 <p>バーガー注文・登録画面の「イライラする罠」を班で探そう！</p>
               </div>
             </div>
@@ -129,14 +131,22 @@ export const SouzouHub: React.FC<SouzouHubProps> = ({
 
           {/* Action buttons */}
           <div className="lesson-actions">
-            <button className="souzou-action-btn slides" onClick={onOpenSlides}>
-              <Presentation size={18} />
-              <span>講義スライドを開く（15分・大画面用）</span>
+            <button className="souzou-action-btn primary-enter" onClick={() => onSelectTheme('uiux')}>
+              <span>第1回の部屋に入る（スライド＆独立デモ）</span>
+              <ChevronRight size={18} />
             </button>
-            <button className="souzou-action-btn game" onClick={onOpenGame}>
-              <Gamepad2 size={18} />
-              <span>体験ゲームを起動する（30分・タブレット用）</span>
-            </button>
+            {onQuickOpenSlides && (
+              <button className="souzou-action-btn slides" onClick={onQuickOpenSlides}>
+                <Presentation size={16} />
+                <span>スライド直通</span>
+              </button>
+            )}
+            {onQuickOpenGame && (
+              <button className="souzou-action-btn game" onClick={onQuickOpenGame}>
+                <Gamepad2 size={16} />
+                <span>ゲーム直通</span>
+              </button>
+            )}
           </div>
         </div>
 
