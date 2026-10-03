@@ -1,10 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, BookOpen, GraduationCap, Key, Lock, Plus, Search, Trash2, Unlock } from 'lucide-react';
+import { 
+  ArrowUpRight, 
+  BookOpen, 
+  GraduationCap, 
+  Key, 
+  Plus, 
+  Search, 
+  Trash2, 
+  Unlock, 
+  Sparkles, 
+  Clock, 
+  FileText, 
+  Layers, 
+  ExternalLink,
+  ChevronRight
+} from 'lucide-react';
 import { groups, type Category, type SchoolLink, validLink } from './model';
+
+const KanjiApp = React.lazy(() => 
+  import('./apps/kanji/KanjiApp').then(m => ({ default: m.KanjiApp }))
+);
 
 const STORAGE_KEY = 'benkyo_passphrase';
 
 export function App() {
+  const [view, setView] = useState<'portal' | 'kanji'>(() => {
+    return window.location.hash === '#kanji' ? 'kanji' : 'portal';
+  });
+
+  const [activeTab, setActiveTab] = useState<'apps' | 'links'>('apps');
   const [links, setLinks] = useState<SchoolLink[]>([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -14,6 +38,25 @@ export function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authInput, setAuthInput] = useState('');
   const [authError, setAuthError] = useState('');
+
+  // Handle Hash Change
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === '#kanji') {
+        setView('kanji');
+      } else {
+        setView('portal');
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const navigateTo = (newView: 'portal' | 'kanji') => {
+    setView(newView);
+    window.location.hash = newView === 'kanji' ? '#kanji' : '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Initial fetch (Public)
   useEffect(() => {
@@ -100,6 +143,38 @@ export function App() {
     setPassphrase('');
   }
 
+  // If Kanji App view is active
+  if (view === 'kanji') {
+    return (
+      <div className="space-shell">
+        <header>
+          <div className="brand" style={{ cursor: 'pointer' }} onClick={() => navigateTo('portal')}>
+            <GraduationCap size={24} />
+            <span>benkyo</span>
+            <small>無料塾のツールホーム</small>
+          </div>
+          <div className="auth-controls">
+            <button className="quiet" onClick={() => navigateTo('portal')}>
+              ホームへ戻る
+            </button>
+          </div>
+        </header>
+
+        <div className="space-content" style={{ maxWidth: '960px' }}>
+          <React.Suspense fallback={<div className="kanji-app-container"><div className="kanji-main-card"><div className="loading-box">漢字ドリルを読み込み中…</div></div></div>}>
+            <KanjiApp onBack={() => navigateTo('portal')} />
+          </React.Suspense>
+        </div>
+
+        <footer>
+          <span>benkyo - 無料塾ポータル & 学習ツール集</span>
+          <small>誰でも利用可能</small>
+        </footer>
+      </div>
+    );
+  }
+
+  // Main Portal View
   return (
     <div className="space-shell">
       <header>
@@ -130,90 +205,183 @@ export function App() {
       </header>
 
       <div className="space-content school-content">
+        {/* Hero Greeting */}
         <div className="greeting school-greeting">
           <div>
             <p className="eyebrow">LEARNING SUPPORT / HOME</p>
             <h1>教える時間を、もっと豊かに。</h1>
-            <p>無料塾の道具箱。授業の準備から、振り返りまで。</p>
+            <p>無料塾の道具箱。自作学習アプリから、教材リンク集まで。</p>
           </div>
           <GraduationCap size={70} strokeWidth={1} />
         </div>
 
-        <div className="school-heading">
-          <h2>無料塾のツールホーム</h2>
-          <button
-            className="primary"
-            disabled={busy}
-            onClick={() =>
-              openForm({
-                id: crypto.randomUUID(),
-                title: '',
-                url: '',
-                category: 'prepare',
-                description: ''
-              })
-            }
+        {/* Tab switcher between Apps and Links */}
+        <div className="portal-tabs-nav">
+          <button 
+            className={`portal-tab-btn ${activeTab === 'apps' ? 'active' : ''}`}
+            onClick={() => setActiveTab('apps')}
           >
-            <Plus size={16} /> 教材・ツールを登録
+            <Sparkles size={16} /> 学習ツール・アプリ集
+          </button>
+          <button 
+            className={`portal-tab-btn ${activeTab === 'links' ? 'active' : ''}`}
+            onClick={() => setActiveTab('links')}
+          >
+            <BookOpen size={16} /> 教材・外部ツールリンク
           </button>
         </div>
 
-        <p className="help">
-          誰でも閲覧できます。登録・編集・削除を行うには、講師用の合言葉が必要です。
-        </p>
+        {/* TAB 1: Apps Hub */}
+        {activeTab === 'apps' && (
+          <section className="apps-hub-section">
+            <div className="section-header-row">
+              <h2><Sparkles size={20} color="#315e4d" /> 自作学習アプリ集</h2>
+              <p>授業や自習でそのまま使えるインタラクティブなWebアプリです。</p>
+            </div>
 
-        {error && <div className="error" role="alert">{error}</div>}
-
-        <label className="search">
-          <Search size={17} />
-          <input
-            aria-label="塾のツールを検索"
-            placeholder="教材やツールを探す…"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-          />
-        </label>
-
-        <div className="school-groups">
-          {Object.entries(groups).map(([key, g]) => (
-            <section className="school-group" key={key}>
-              <small>{g.number}</small>
-              <h2>{g.title}</h2>
-              <p>{g.description}</p>
-              {links
-                .filter(l => l.category === key && (l.title + ' ' + l.description).includes(query))
-                .map(l => (
-                  <div className="school-link" key={l.id}>
-                    <a href={l.url} target="_blank" rel="noopener noreferrer">
-                      <BookOpen size={18} />
-                      <span>
-                        <strong>{l.title}</strong>
-                        <small>{l.description || new URL(l.url).hostname}</small>
-                      </span>
-                      <ArrowUpRight size={16} />
-                    </a>
-                    <button disabled={busy} className="quiet" onClick={() => openForm(l)}>
-                      編集
-                    </button>
+            <div className="app-cards-grid">
+              {/* Featured: Kanji Quiz App */}
+              <div className="app-card featured">
+                <div>
+                  <div className="app-card-top">
+                    <div className="app-card-icon">
+                      <GraduationCap size={26} />
+                    </div>
+                    <div className="app-card-title-group">
+                      <span className="badge-tag">全746問収録</span>
+                      <h3>神奈川県高校入試 漢字練習</h3>
+                    </div>
                   </div>
-                ))}
-              {!links.some(l => l.category === key) && (
-                <div className="school-empty">
-                  ここに教材やツールへのリンクを<br />
-                  まとめられます。
+                  <p>
+                    神奈川県公立高校入試（国語・問1）の定番形式！<br />
+                    設問と同じ漢字を使う文を4択から選ぶ実戦ドリルです。クリックで即座に正誤判定＆すべての選択肢の漢字解説が表示されます。
+                  </p>
                 </div>
-              )}
-            </section>
-          ))}
-        </div>
+                <div className="app-card-footer">
+                  <span className="app-card-meta">10問テスト / エンドレス / 復習</span>
+                  <button className="app-launch-btn" onClick={() => navigateTo('kanji')}>
+                    アプリを開く <ChevronRight size={15} />
+                  </button>
+                </div>
+              </div>
 
-        <div className="panel school-next">
-          <h2>これから、この場所に増やせるもの</h2>
-          <p>
-            生徒ごとの学習記録、授業メモ、問題プリント、授業タイマーなど。必要な道具をひとつずつ追加できる構成です。
-          </p>
-          <small>これらの専用アプリはまだ未実装です。今は既存の教材・ツールのURLを登録して使えます。</small>
-        </div>
+              {/* Planned App 1: Class Timer */}
+              <div className="app-card coming-soon">
+                <div>
+                  <div className="app-card-top">
+                    <div className="app-card-icon" style={{ background: '#f0f3eb', color: '#68776f' }}>
+                      <Clock size={24} />
+                    </div>
+                    <div className="app-card-title-group">
+                      <span className="badge-tag secondary">企画・準備中</span>
+                      <h3>授業・演習タイマー</h3>
+                    </div>
+                  </div>
+                  <p>
+                    演習時間や小テスト、グループワークの残り時間を大きな画面で見やすく表示・カウントダウンするタイマーです。
+                  </p>
+                </div>
+                <div className="app-card-footer">
+                  <span className="app-card-meta">近日追加予定</span>
+                </div>
+              </div>
+
+              {/* Planned App 2: Student Learning Record */}
+              <div className="app-card coming-soon">
+                <div>
+                  <div className="app-card-top">
+                    <div className="app-card-icon" style={{ background: '#f0f3eb', color: '#68776f' }}>
+                      <FileText size={24} />
+                    </div>
+                    <div className="app-card-title-group">
+                      <span className="badge-tag secondary">企画・準備中</span>
+                      <h3>学習記録・引き継ぎメモ</h3>
+                    </div>
+                  </div>
+                  <p>
+                    生徒ごとの進み具合や得意・苦手分野、次回の講師への引き継ぎ内容を安全に共有・記録するツールです。
+                  </p>
+                </div>
+                <div className="app-card-footer">
+                  <span className="app-card-meta">近日追加予定</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* TAB 2: Links Section */}
+        {activeTab === 'links' && (
+          <section className="links-hub-section">
+            <div className="school-heading">
+              <h2>無料塾のツール・教材リンク集</h2>
+              <button
+                className="primary"
+                disabled={busy}
+                onClick={() =>
+                  openForm({
+                    id: crypto.randomUUID(),
+                    title: '',
+                    url: '',
+                    category: 'prepare',
+                    description: ''
+                  })
+                }
+              >
+                <Plus size={16} /> 教材・ツールを登録
+              </button>
+            </div>
+
+            <p className="help">
+              誰でも閲覧できます。登録・編集・削除を行うには、講師用の合言葉が必要です。
+            </p>
+
+            {error && <div className="error" role="alert">{error}</div>}
+
+            <label className="search">
+              <Search size={17} />
+              <input
+                aria-label="塾のツールを検索"
+                placeholder="教材やツールを探す…"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+              />
+            </label>
+
+            <div className="school-groups">
+              {Object.entries(groups).map(([key, g]) => (
+                <section className="school-group" key={key}>
+                  <small>{g.number}</small>
+                  <h2>{g.title}</h2>
+                  <p>{g.description}</p>
+                  {links
+                    .filter(l => l.category === key && (l.title + ' ' + l.description).includes(query))
+                    .map(l => (
+                      <div className="school-link" key={l.id}>
+                        <a href={l.url} target="_blank" rel="noopener noreferrer">
+                          <BookOpen size={18} />
+                          <span>
+                            <strong>{l.title}</strong>
+                            <small>{l.description || new URL(l.url).hostname}</small>
+                          </span>
+                          <ArrowUpRight size={16} />
+                        </a>
+                        <button disabled={busy} className="quiet" onClick={() => openForm(l)}>
+                          編集
+                        </button>
+                      </div>
+                    ))}
+                  {!links.some(l => l.category === key) && (
+                    <div className="school-empty">
+                      ここに教材やツールへのリンクを<br />
+                      まとめられます。
+                    </div>
+                  )}
+                </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Edit Modal */}
         {form && (
@@ -343,7 +511,7 @@ export function App() {
       </div>
 
       <footer>
-        <span>benkyo - 無料塾ポータル</span>
+        <span>benkyo - 無料塾ポータル & 自作学習ツール集</span>
         <small>誰でも閲覧可能 · 編集権限保護</small>
       </footer>
     </div>
