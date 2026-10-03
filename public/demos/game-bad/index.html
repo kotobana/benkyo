@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEGEND QUEST - ネットメンバー登録</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="window-box">
+    <div class="top-bar">
+      <span class="title">LEGEND QUEST - ACCOUNT PORTAL #801</span>
+      <span id="back-link" class="back-link">← 前の画面に戻る</span>
+    </div>
+
+    <!-- Error Banner shown on failure -->
+    <div id="error-banner" class="error-banner">
+      <strong>【入力エラー 0x8401】</strong><br>
+      暗証番号（パスワード）の要件が不適合です。<br>
+      （要件：英大文字、英小文字、数字、および特殊記号 [!@#$%^&*] をそれぞれ最低1文字以上含む10文字以上である必要があります）
+    </div>
+
+    <form id="reg-form">
+      <div class="form-row">
+        <label for="username">プレイヤーID（英数）</label>
+        <input type="text" id="username" placeholder="taro123" required>
+      </div>
+
+      <div class="form-row">
+        <label for="password">暗証番号（パスワード）</label>
+        <input type="password" id="password" required>
+        <div class="secret-note">
+          ※ セキュリティ保護規程に基づき、パスワードの構文規則は非公開です。
+        </div>
+      </div>
+
+      <div class="terms-row">
+        <label>
+          <input type="checkbox" id="terms" class="tiny-checkbox">
+          <span>規約第1条〜第180条に基づくユーザー許諾約款および個人情報条項に全面同意する</span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn-ambiguous">
+          登録送信 / 破棄 / 再試行
+        </button>
+        <div class="btn-caption">
+          ※ サーバーの負荷状態により実行処理が自動判定されます。
+        </div>
+      </div>
+    </form>
+
+    <div id="success-box" class="success-box">
+      <h2>登録完了</h2>
+      <p style="margin-top: 10px;">アカウントの登録が正常に受け付けられました。</p>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

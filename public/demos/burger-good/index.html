@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smile Burger モバイルオーダー</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🍔</span>
+        <span class="brand-name">Smile Burger</span>
+      </div>
+      <div id="header-cart-count" class="header-cart-badge">
+        カート: 1点
+      </div>
+    </div>
+  </header>
+
+  <div class="hero-banner">
+    <h2>できたてをスマホで事前注文</h2>
+    <p>待たずに店頭ですぐ受け取り！できたてアツアツの味をお届けします。</p>
+  </div>
+
+  <main class="main-container">
+    <div id="main-order-view">
+      <h3 class="section-title">本日のおすすめメニュー</h3>
+
+      <div class="menu-grid">
+        <!-- Item 1: Burger -->
+        <div class="item-card">
+          <div class="item-img-area">
+            🍔
+            <span class="badge-pop">一番人気</span>
+          </div>
+          <div class="item-body">
+            <h4 class="item-title">特製てりやきビーフバーガー</h4>
+            <p class="item-desc">
+              ジューシーな100%ビーフパティに、自家製甘辛てりやきソースとシャキシャキの国産レタス。
+            </p>
+            <div class="item-footer">
+              <span class="price">¥580 <small>(税込)</small></span>
+              <button 
+                type="button" 
+                class="btn-add"
+                data-id="burger"
+                data-name="特製てりやきビーフバーガー"
+                data-price="580"
+              >
+                ＋ カートに追加
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2: Fries -->
+        <div class="item-card">
+          <div class="item-img-area">
+            🍟
+            <span class="badge-pop">セット定番</span>
+          </div>
+          <div class="item-body">
+            <h4 class="item-title">カリカリ皮付きフライドポテト(M)</h4>
+            <p class="item-desc">
+              外はカリッ、中はホクホク。オリジナルブレンドの岩塩で引き立つジャガイモ本来の甘み。
+            </p>
+            <div class="item-footer">
+              <span class="price">¥320 <small>(税込)</small></span>
+              <button 
+                type="button" 
+                class="btn-add"
+                data-id="fries"
+                data-name="カリカリ皮付きフライドポテト(M)"
+                data-price="320"
+              >
+                ＋ カートに追加
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3: Drink -->
+        <div class="item-card">
+          <div class="item-img-area">
+            🥤
+          </div>
+          <div class="item-body">
+            <h4 class="item-title">すっきりクラフトコーラ(M)</h4>
+            <p class="item-desc">
+              スパイスと柑橘をじっくり煮込んだ爽快な炭酸ドリンク。バーガーと相性抜群です。
+            </p>
+            <div class="item-footer">
+              <span class="price">¥250 <small>(税込)</small></span>
+              <button 
+                type="button" 
+                class="btn-add"
+                data-id="cola"
+                data-name="すっきりクラフトコーラ(M)"
+                data-price="250"
+              >
+                ＋ カートに追加
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Completed View -->
+    <div id="order-complete-card" class="order-complete-card">
+      <div class="icon">🎉</div>
+      <h2>ご注文ありがとうございます！</h2>
+      <p style="font-size: 15px; color: #4a5568; margin-top: 8px;">
+        お受け取り番号: <strong style="font-size: 24px; color: #22543d;">#B-104</strong>
+      </p>
+      <p style="font-size: 13px; color: #718096; margin-top: 8px;">
+        約7〜10分でお渡し可能です。店頭レジカウンターにて上記番号をお見せください。
+      </p>
+      <button type="button" id="btn-order-again" class="btn-order-again">続けて注文する</button>
+    </div>
+  </main>
+
+  <!-- Floating Bottom Checkout Bar -->
+  <div id="floating-order-bar" class="floating-order-bar">
+    <div class="floating-inner">
+      <div class="order-info">
+        <span id="floating-cart-count" class="order-count">合計 1 点</span>
+        <span id="floating-cart-total" class="order-total-price">¥580</span>
+      </div>
+      <button type="button" id="btn-checkout" class="btn-checkout">
+        注文を確定する (店頭受取) ➔
+      </button>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

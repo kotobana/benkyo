@@ -5,31 +5,31 @@ import {
   Globe, 
   Clock, 
   Users, 
-  Lightbulb, 
   Sparkles, 
   FileCode, 
-  CheckCircle2, 
   ExternalLink,
-  ChevronRight,
-  Gamepad2,
-  BookOpen
+  ChevronDown,
+  ChevronUp,
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 import { UIUX_MARP_MARKDOWN } from './slidesMarp';
 
 interface UiUxThemeDetailProps {
   onBackToHub: () => void;
   onOpenSlides: () => void;
-  onOpenDemo: (demoKey: 'burger' | 'game' | 'school', mode: 'bad' | 'good') => void;
-  onOpenAllInOneGame: () => void;
 }
 
 export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
   onBackToHub,
-  onOpenSlides,
-  onOpenDemo,
-  onOpenAllInOneGame
+  onOpenSlides
 }) => {
   const [showMarpSnippet, setShowMarpSnippet] = useState(false);
+  const [openTeacherGuideIndex, setOpenTeacherGuideIndex] = useState<number | null>(null);
+
+  const toggleTeacherGuide = (index: number) => {
+    setOpenTeacherGuideIndex(current => current === index ? null : index);
+  };
 
   return (
     <div className="theme-detail-container">
@@ -51,7 +51,7 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
         <p className="hero-description">
           「UI＝見た目やボタン」「UX＝使ったときの気持ち」。<br />
           身近な家電やゲーム、Webサイトを通じて、人の行動を左右するデザインの魔法を解き明かします。
-          直感クイズで学び、本物の独立Webサイト（クソUI vs 神UI）を操作して体感しよう！
+          Marpスライド講義と、本物の独立Webサイト（クソUI vs 神UI）を体験しよう！
         </p>
 
         <div className="hero-quick-meta">
@@ -114,7 +114,7 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
         )}
       </div>
 
-      {/* Content Section 2: Standalone Demo Web Sites */}
+      {/* Content Section 2: Real Standalone Demo Web Sites */}
       <div className="detail-section-card highlight-demos">
         <div className="section-card-header">
           <div className="header-icon demos">
@@ -123,8 +123,8 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
           <div>
             <h2>② 本物の独立Webサイトで体験（30分：クソUI vs 神UI）</h2>
             <p>
-              埋め込みフレームではなく、<strong>ブラウザ全画面の独立したWebサイト</strong>として開きます。<br />
-              実際に生徒のタブレットで操作して、「うわ、めっちゃ押しにくい！」「神UIにしたらサクサク動く！」をリアルに体感できます。
+              埋め込み式ではなく、<strong>HTML・CSS・JavaScriptが完全に独立した本物のWebサイト</strong>が新しいタブで開きます。<br />
+              学習用ポップアップやヒントは一切ありません。生徒が本物のサイトとして触り、先生の問いかけで気づきを深めます。
             </p>
           </div>
         </div>
@@ -140,23 +140,49 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
               </div>
             </div>
             <p className="site-pitch">
-              写真がない、ボタンが米粒サイズ「入」、合計金額が非表示、注文ボタンの真横に「全消去」の罠…！
+              写真がない、ボタンが極小「入」、合計金額が非表示、注文確定の横に「全取消」の罠ボタン…！
             </p>
             <div className="site-launch-buttons">
-              <button 
+              <a 
+                href="/demos/burger-bad/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn bad"
-                onClick={() => onOpenDemo('burger', 'bad')}
-                title="イライラバーガーを開く"
+                title="新しいタブでイライラバーガーを開く"
               >
-                💀 クソUI版を開く
-              </button>
-              <button 
+                💀 クソUI版を開く (別タブ ↗)
+              </a>
+              <a 
+                href="/demos/burger-good/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn good"
-                onClick={() => onOpenDemo('burger', 'good')}
-                title="スマイルバーガーを開く"
+                title="新しいタブでスマイルバーガーを開く"
               >
-                ✨ 神UI版を開く
+                ✨ 神UI版を開く (別タブ ↗)
+              </a>
+            </div>
+
+            {/* 先生用解説アコーディオン */}
+            <div className="teacher-guide-accordion">
+              <button 
+                className="accordion-toggle" 
+                onClick={() => toggleTeacherGuide(1)}
+              >
+                <HelpCircle size={14} />
+                <span>先生用ファシリテーションメモ（罠と解説ポイント）</span>
+                {openTeacherGuideIndex === 1 ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
+              {openTeacherGuideIndex === 1 && (
+                <div className="accordion-content">
+                  <ul>
+                    <li><strong>写真がない：</strong>文字だけでは具材や大きさが想像できない。「どんな味か分からないよね？」と問いかける。</li>
+                    <li><strong>極小「入」ボタン：</strong>指で押そうとしても小さすぎて当たらない。押し間違いの原因。</li>
+                    <li><strong>合計金額非表示：</strong>買ってみるまでいくら払うか分からない恐怖感。</li>
+                    <li><strong>全取消ボタンの配置：</strong>注文確定のすぐ真横に赤い全取消があり、誤操作で全データが消える。</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
@@ -173,18 +199,43 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
               パスワードの厳しいルールを隠しておいて急に怒る、戻るボタンで全消去、米粒チェックボックス…！
             </p>
             <div className="site-launch-buttons">
-              <button 
+              <a 
+                href="/demos/game-bad/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn bad"
-                onClick={() => onOpenDemo('game', 'bad')}
               >
-                💀 クソUI版を開く
-              </button>
-              <button 
+                💀 クソUI版を開く (別タブ ↗)
+              </a>
+              <a 
+                href="/demos/game-good/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn good"
-                onClick={() => onOpenDemo('game', 'good')}
               >
-                ✨ 神UI版を開く
+                ✨ 神UI版を開く (別タブ ↗)
+              </a>
+            </div>
+
+            {/* 先生用解説アコーディオン */}
+            <div className="teacher-guide-accordion">
+              <button 
+                className="accordion-toggle" 
+                onClick={() => toggleTeacherGuide(2)}
+              >
+                <HelpCircle size={14} />
+                <span>先生用ファシリテーションメモ（罠と解説ポイント）</span>
+                {openTeacherGuideIndex === 2 ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
+              {openTeacherGuideIndex === 2 && (
+                <div className="accordion-content">
+                  <ul>
+                    <li><strong>後出しパスワード条件：</strong>最初から「英数8文字」と書くべきなのに、送信してから怒られるイライラ。神UIのリアルタイム緑チェックと比較。</li>
+                    <li><strong>戻ると全消去：</strong>一度戻ったら全部消えてやり直し。「また最初から！？」という徒労感。</li>
+                    <li><strong>米粒チェックボックス：</strong>利用規約が小さすぎて指でチェックできない。</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
@@ -201,34 +252,44 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
               ボタンを押しても音も色も変わらず無反応で連打、超長文スクロールの一番底に「明日の持ち物」が…！
             </p>
             <div className="site-launch-buttons">
-              <button 
+              <a 
+                href="/demos/school-bad/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn bad"
-                onClick={() => onOpenDemo('school', 'bad')}
               >
-                💀 クソUI版を開く
-              </button>
-              <button 
+                💀 クソUI版を開く (別タブ ↗)
+              </a>
+              <a 
+                href="/demos/school-good/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="launch-site-btn good"
-                onClick={() => onOpenDemo('school', 'good')}
               >
-                ✨ 神UI版を開く
-              </button>
+                ✨ 神UI版を開く (別タブ ↗)
+              </a>
             </div>
-          </div>
-        </div>
 
-        {/* All-in-one stage runner button */}
-        <div className="all-in-one-game-box">
-          <div className="all-in-one-info">
-            <Gamepad2 size={24} color="#f38b43" />
-            <div>
-              <strong>全3ステージ通しプレイモード</strong>
-              <p>各ステージの罠を順番にすべて探し出して全クリアを目指すチャレンジモードです。</p>
+            {/* 先生用解説アコーディオン */}
+            <div className="teacher-guide-accordion">
+              <button 
+                className="accordion-toggle" 
+                onClick={() => toggleTeacherGuide(3)}
+              >
+                <HelpCircle size={14} />
+                <span>先生用ファシリテーションメモ（罠と解説ポイント）</span>
+                {openTeacherGuideIndex === 3 ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              </button>
+              {openTeacherGuideIndex === 3 && (
+                <div className="accordion-content">
+                  <ul>
+                    <li><strong>無反応ボタン（ノーフィードバック）：</strong>押しても画面も音も変わらないので「押せたのかな？」と何回も連打してしまう。神UIの「提出完了（ポン！）」と比較。</li>
+                    <li><strong>一番下に埋もれた最重要連絡：</strong>明日の体操着という一番知りたい情報が長文の奥底にある。神UIのように最上部に赤枠で出すべき。</li>
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
-          <button className="all-in-one-btn" onClick={onOpenAllInOneGame}>
-            通しゲームに挑戦 ➔
-          </button>
         </div>
       </div>
 
@@ -236,28 +297,31 @@ export const UiUxThemeDetail: React.FC<UiUxThemeDetailProps> = ({
       <div className="detail-section-card teacher-guide-box">
         <div className="guide-header">
           <BookOpen size={20} color="#315e4d" />
-          <h3>先生・講師のための50分授業進行ガイド</h3>
+          <h3>先生・講師のための50分授業進行タイムテーブル</h3>
         </div>
         <div className="guide-body">
           <div className="timeline-row">
             <span className="timeline-time">00〜15分</span>
             <div className="timeline-content">
-              <strong>講義スライドで直感クイズ</strong>
-              <p>電子レンジやドアの2択で教室を盛り上げます。「どっちが使いやすかった？なんで？」をペアや全体で発問します。</p>
+              <strong>Marp講義スライドで直感クイズ</strong>
+              <p>電子レンジやドアの2択で教室を盛り上げます。「どっちが使いやすかった？なんで？」をペアや全体で発問し、UIとUXの概念を伝えます。</p>
             </div>
           </div>
           <div className="timeline-row">
             <span className="timeline-time">15〜45分</span>
             <div className="timeline-content">
-              <strong>班ごとにタブレットでデモサイト体験</strong>
-              <p>まずは「クソUI版」を開かせて「どこがひどいか」を探させます。その後「神UI版」に切り替えて「全然違う！」と感動を味わわせます。</p>
+              <strong>班ごとにタブレットで独立デモサイト体験</strong>
+              <p>
+                生徒に「クソUI版」のリンクを開かせます。「えーっ！これ写真ないじゃん！」「ボタン小さすぎ！」と声が上がったら大成功です。<br />
+                その後「神UI版」を開かせると「うわ、めっちゃ使いやすい！」と劇的な感動が生まれます。
+              </p>
             </div>
           </div>
           <div className="timeline-row">
             <span className="timeline-time">45〜50分</span>
             <div className="timeline-content">
               <strong>まとめスライドで日常のデザイン観察へ</strong>
-              <p>「使いやすさは誰かの思いやり」。身の回りの自販機やスマホアプリにも工夫があることを伝えて締めくくります。</p>
+              <p>「使いやすさは誰かの思いやり」。身の回りの自販機やノートの書き方にもUI/UXがあることを伝えて締めくくります。</p>
             </div>
           </div>
         </div>

@@ -1,0 +1,109 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "MS UI Gothic", sans-serif;
+  background-color: #f0f0f0;
+  color: #333333;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+header {
+  background-color: #3b4252;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-bottom: 2px solid #2e3440;
+}
+
+header h1 {
+  font-size: 15px;
+}
+
+.user-info {
+  background-color: #e5e9f0;
+  padding: 6px 20px;
+  font-size: 11px;
+  border-bottom: 1px solid #d8dee9;
+}
+
+.container {
+  max-width: 680px;
+  margin: 16px auto;
+  background-color: #ffffff;
+  border: 1px solid #d8dee9;
+  padding: 20px;
+}
+
+.section-box {
+  border: 1px solid #cccccc;
+  padding: 14px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+}
+
+.section-box h2 {
+  font-size: 13px;
+  font-weight: bold;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+/* クソUI: 押しても無反応なボタン */
+.btn-dead-submit {
+  width: 100%;
+  background-color: #e5e5e5;
+  color: #666666;
+  border: 1px solid #999999;
+  padding: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+/* activeでもあえてスタイルを変えない（完全無反応） */
+
+.click-counter-secret {
+  display: none;
+}
+
+.long-notice-box {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 14px;
+  height: 280px;
+  overflow-y: scroll;
+}
+
+.long-notice-box h3 {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.long-notice-box p {
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: #555555;
+}
+
+/* クソUI: 超長文の一番下に埋もれた重要事項 */
+.buried-alert-box {
+  margin-top: 40px;
+  padding: 10px;
+  background-color: #fffbe6;
+  border: 1px dashed #d48806;
+}
+
+.buried-alert-box strong {
+  color: #d4380d;
+  font-size: 13px;
+}
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  color: #888888;
+  padding: 20px 0;
+}

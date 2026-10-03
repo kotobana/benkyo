@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>青葉中学校 学務連絡システム</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <h1>青葉中学校 学務連絡・出席管理システム ver 1.02</h1>
+  </header>
+
+  <div class="user-info">
+    ログイン中： 3年2組 14番 （生徒アカウント）
+  </div>
+
+  <div class="container">
+    <!-- Section 1: Attendance submission with DEAD BUTTON -->
+    <div class="section-box">
+      <h2>■ 朝の健康観察・出席確認報告</h2>
+      <p style="margin-bottom: 10px; font-size: 12px;">体温を入力し、送信ボタンを押してください。</p>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <label for="temp">今朝の体温:</label>
+        <input type="text" id="temp" value="36.5" style="width: 60px; padding: 4px;"> ℃
+      </div>
+
+      <button type="button" id="btn-dead-submit" class="btn-dead-submit">
+        健康観察票を送信
+      </button>
+
+      <div id="click-counter-secret" class="click-counter-secret" style="margin-top: 8px; font-size: 11px; color: #b91c1c;"></div>
+    </div>
+
+    <!-- Section 2: Long scrolling text with BURIED INFO AT BOTTOM -->
+    <div class="section-box">
+      <h2>■ 学校からのお便り・連絡事項アーカイブ</h2>
+      <div class="long-notice-box">
+        <h3>学校教育目標および中期経営計画の進捗について</h3>
+        <p>
+          本校におきましては、知・徳・体の調和のとれた豊かな人間性の育成を目指し、学校・家庭・地域が一体となった教育活動を推進しております。本年度におきましても、主体的・対話的で深い学びの実現に向けた授業改善に努めるとともに、生徒一人ひとりの学習意欲の向上と基礎基本の定着を最重点課題として取り組んでまいりました。
+        </p>
+        <p>
+          また、生徒指導におきましては、個性の伸長を促すとともに、自律的な生活態度の育成を重視し、規範意識の醸成と人権尊重の精神の涵養に努めております。校内研修会においては、情報通信技術（ICT）の効果的な活用方法についての研究協議を重ね、各教科における実践的な指導力の向上を図っております。
+        </p>
+        <p>
+          施設設備の維持管理および安全衛生管理に関しましても、点検計画に基づき定期的な安全確認を実施しており、生徒が安心して日々の教育活動に専念できるよう万全の態勢を整えております。
+        </p>
+        <p>
+          （中略…さらに延々と教育方針や規約、沿革の長文が続きます…）
+        </p>
+        <p>
+          地域社会との連携におきましても、ボランティア活動や職場体験学習の受け入れ等、多大なるご理解とご協力をいただいておりますことに深く感謝申し上げます。今後とも本校教育活動への温かいご支援を賜りますようお願い申し上げます。
+        </p>
+
+        <!-- BURIED CRUCIAL INFO -->
+        <div class="buried-alert-box">
+          <p style="font-size: 11px; color: #888;">（※こんな長文スクロールの一番下まで見ないと気づけない…）</p>
+          <strong>【重要連絡：明日の持ち物について】</strong>
+          <p style="margin: 4px 0 0 0; color: #b32400; font-weight: bold;">
+            明日（金曜）は学年合同の体力測定を実施します。全校生徒は「体操着」「体育館シューズ」「汗拭きタオル」を忘れずに持参してください。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 青葉中学校 学務情報課
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

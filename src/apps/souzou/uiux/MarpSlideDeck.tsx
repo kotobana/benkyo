@@ -10,18 +10,17 @@ import {
   ArrowLeft, 
   Gamepad2, 
   Sparkles,
-  X
+  X,
+  ExternalLink
 } from 'lucide-react';
 import { UIUX_MARP_MARKDOWN, parseMarpSlides, type ParsedMarpSlide } from './slidesMarp';
 
 interface MarpSlideDeckProps {
   onBack: () => void;
-  onLaunchDemo?: (demoKey?: string) => void;
 }
 
 export const MarpSlideDeck: React.FC<MarpSlideDeckProps> = ({
-  onBack,
-  onLaunchDemo
+  onBack
 }) => {
   const [slides] = useState<ParsedMarpSlide[]>(() => parseMarpSlides(UIUX_MARP_MARKDOWN));
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -151,11 +150,17 @@ export const MarpSlideDeck: React.FC<MarpSlideDeckProps> = ({
           </button>
         </div>
 
-        {currentSlideIndex >= 9 && onLaunchDemo && (
+        {currentSlideIndex >= 9 && (
           <div className="quick-demo-launch">
-            <button className="marp-launch-game-btn" onClick={() => onLaunchDemo()}>
-              <Gamepad2 size={16} /> クソUI脱出ゲームを起動 ➔
-            </button>
+            <a 
+              href="/demos/burger-bad/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="marp-launch-game-btn"
+              title="独立した本物のデモサイト（クソUI版）を新しいタブで開く"
+            >
+              <ExternalLink size={16} /> 独立デモサイトを開く (別タブ ↗)
+            </a>
           </div>
         )}
       </div>

@@ -2906,6 +2906,66 @@ footer {
   transform: translateY(-1px);
 }
 
+/* 先生用解説アコーディオン */
+.teacher-guide-accordion {
+  margin-top: 14px;
+  border-top: 1px dashed #edd4c0;
+  padding-top: 10px;
+}
+
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: #fdfaf6;
+  border: 1px solid #f1decb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #8c5324;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  gap: 6px;
+}
+
+.accordion-toggle:hover {
+  background: #fcf4ec;
+  color: #6d3a12;
+  border-color: #e5c5aa;
+}
+
+.accordion-content {
+  margin-top: 8px;
+  background: #faf7f2;
+  border: 1px solid #ebd9c8;
+  border-radius: 8px;
+  padding: 10px 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.accordion-content ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #554439;
+}
+
+.accordion-content li {
+  margin-bottom: 6px;
+}
+
+.accordion-content li:last-child {
+  margin-bottom: 0;
+}
+
+.accordion-content strong {
+  color: #2b1f17;
+}
+
 .all-in-one-game-box {
   background: #fef7f0;
   border: 1px dashed #f6ad55;

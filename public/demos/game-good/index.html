@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUEST LEGENDS ONLINE - 新規冒険者登録</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="reg-card">
+    <div class="header-area">
+      <div class="game-badge">⚔️ QUEST LEGENDS ONLINE</div>
+      <h1>新規冒険者アカウント作成</h1>
+      <p>わずか1分で登録完了！世界中のプレイヤーと冒険へ。</p>
+    </div>
+
+    <form id="reg-form">
+      <div class="form-item">
+        <label for="username">プレイヤー名（ニックネーム）</label>
+        <input type="text" id="username" placeholder="例: ゆうしゃタロウ" required>
+      </div>
+
+      <div class="form-item">
+        <label for="password">パスワード設定</label>
+        <div class="password-input-wrap">
+          <input type="password" id="password" placeholder="8文字以上の英数字" required>
+          <button type="button" id="btn-toggle-eye" class="btn-toggle-eye" title="パスワードを表示/非表示">👁️</button>
+        </div>
+
+        <!-- リアルタイム入力サポート -->
+        <div class="rules-chips-row">
+          <span id="chip-length" class="rule-chip">
+            <span class="icon">・</span> 8文字以上
+          </span>
+          <span id="chip-letter" class="rule-chip">
+            <span class="icon">・</span> 英字を含む
+          </span>
+          <span id="chip-number" class="rule-chip">
+            <span class="icon">・</span> 数字を含む
+          </span>
+        </div>
+      </div>
+
+      <div class="form-item terms-item">
+        <label class="terms-label">
+          <input type="checkbox" id="terms" class="terms-checkbox">
+          <span>
+            <a href="#terms" onclick="event.preventDefault(); alert('利用規約：みんなで仲良くマナーを守ってプレイしましょう。');">利用規約</a> と 
+            <a href="#privacy" onclick="event.preventDefault(); alert('プライバシーポリシー：個人情報を安全に保護します。');">プライバシーポリシー</a> に同意する
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" id="btn-submit" class="btn-submit" disabled>
+        利用規約に同意して冒険を始める ➔
+      </button>
+    </form>
+
+    <div id="success-card" class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2>アカウント作成が完了しました！</h2>
+      <p>ようこそ、<strong id="player-name-display" style="color: #ffffff;"></strong> さん！</p>
+      <button type="button" class="btn-play" onclick="alert('ゲームクライアントを起動します！');">
+        ゲームワールドに入る ➔
+      </button>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

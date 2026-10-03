@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>青葉中 れんらくネット</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🏫</span>
+        <h1>青葉中 れんらくネット</h1>
+      </div>
+      <span class="user-tag">3年2組 14番</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 最重要持ち物アラート（一番上） -->
+    <div class="urgent-notice-card">
+      <div class="urgent-badge">🚨 明日の最重要連絡</div>
+      <h2>【明日（金）の持ち物：体操着・体育館シューズ】</h2>
+      <p>午前中に学年合同の体力測定を実施します。汗拭きタオル・水筒も忘れずに持参してください。</p>
+    </div>
+
+    <!-- 出席・健康カード提出 -->
+    <div class="card">
+      <h3>
+        <span>📋 朝の健康観察カード</span>
+        <span class="date-text">本日 10月4日(金)</span>
+      </h3>
+
+      <div id="form-wrap">
+        <div class="temp-row">
+          <span>今朝の体温:</span>
+          <span class="temp-val">36.5 ℃</span>
+          <span class="status-badge">平熱（良好）</span>
+        </div>
+        <button type="button" id="btn-submit" class="btn-submit">
+          ✓ 健康カードを提出する
+        </button>
+      </div>
+
+      <!-- 送信完了の明快なフィードバック -->
+      <div id="submitted-banner" class="submitted-banner">
+        <strong>✓ 提出完了（<span id="submitted-time"></span> 受信済み）</strong>
+        <p>今日も元気に気をつけて登校してください！</p>
+      </div>
+    </div>
+
+    <!-- お便り一覧 -->
+    <div class="card">
+      <h3>📢 学校からのお便り</h3>
+      <div class="notice-list">
+        <div class="notice-item">
+          <strong>進路説明会のご案内（保護者配布プリント）</strong>
+          <p>来週水曜日の進路説明会に関する案内文書をPDFで掲載しました。</p>
+        </div>
+        <div class="notice-item">
+          <strong>文化祭の準備期間スケジュールについて</strong>
+          <p>放課後練習の最終下校時刻は 17:30 となります。</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

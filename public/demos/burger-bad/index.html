@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BURGER EXPRESS - ネット注文システム</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <h1>BURGER EXPRESS - ネット注文システム</h1>
+    <div class="system-id">端末管理番号: POS-TERM-9022 / 店舗: 横浜駅前店</div>
+  </header>
+
+  <div class="notice-bar">
+    【お知らせ】混雑時はお渡しまでお時間をいただく場合がございます。
+  </div>
+
+  <div class="container">
+    <div id="main-order-form">
+      <p class="instruction-text">
+        メニュー表の右端のボタンを押すと選択品目がカートに加算されます。
+      </p>
+
+      <table class="menu-table">
+        <thead>
+          <tr>
+            <th style="width: 110px;">画像</th>
+            <th>商品名 / 仕様</th>
+            <th style="width: 90px;">単価</th>
+            <th style="width: 50px;">追加</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="img-placeholder">[画像表示不可]</div>
+            </td>
+            <td>
+              <div class="item-name">牛肉バーガー（甘辛醤油タレ）</div>
+              <div class="item-desc">牛肉、レタス、パン、マヨネーズ調味料</div>
+            </td>
+            <td class="item-price">580 円</td>
+            <td>
+              <button type="button" class="btn-tiny-add" title="カートに追加">入</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="img-placeholder">[画像なし]</div>
+            </td>
+            <td>
+              <div class="item-name">油揚げ馬鈴薯（塩味・中）</div>
+              <div class="item-desc">じゃがいも、植物油、食塩</div>
+            </td>
+            <td class="item-price">320 円</td>
+            <td>
+              <button type="button" class="btn-tiny-add" title="カートに追加">入</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="img-placeholder">[画像準備中]</div>
+            </td>
+            <td>
+              <div class="item-name">炭酸飲料（黒色・M）</div>
+              <div class="item-desc">カラメル色素、果糖ぶどう糖液糖</div>
+            </td>
+            <td class="item-price">250 円</td>
+            <td>
+              <button type="button" class="btn-tiny-add" title="カートに追加">入</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cart-summary-box">
+        <div class="count-row">
+          選択中の商品数: <strong id="cart-count">0</strong> 点
+        </div>
+        <div class="total-row">
+          合計お支払い予定金額: <span class="hidden-price">（※ご注文確定ボタンを押した後にサーバー側で計算され表示されます）</span>
+        </div>
+      </div>
+
+      <div class="action-buttons-row">
+        <button type="button" id="btn-confirm" class="btn-confirm">注文確定</button>
+        <button type="button" id="btn-cancel-all" class="btn-cancel-all">全取消</button>
+      </div>
+    </div>
+
+    <div id="order-completed-view" class="order-completed-view">
+      <h2>ご注文を承りました</h2>
+      <p style="margin-top: 10px;">ご注文番号: #0829</p>
+      <p style="margin-top: 6px; font-size: 12px; color: #555;">レジカウンターにて上記番号をお申し付けください。</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; BURGER EXPRESS Co., Ltd. All Rights Reserved.
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
