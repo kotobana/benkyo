@@ -37,3 +37,33 @@ test('all question IDs are unique', () => {
   const ids = new Set(questions.map((q: any) => q.id));
   assert.equal(ids.size, questions.length, 'Duplicate question IDs found');
 });
+
+test('shuffleQuestionOptions maintains correct answer association and randomizes choices', async () => {
+  const { shuffleQuestionOptions } = await import('../src/apps/kanji/utils.ts');
+  const sampleQ = questions[0];
+  const originalCorrectOption = sampleQ.options[sampleQ.answerIndex];
+  const originalCorrectWord = sampleQ.optionWords ? sampleQ.optionWords[sampleQ.answerIndex] : null;
+
+  const observedAnswerIndices = new Set<number>();
+
+  for (let i = 0; i < 50; i++) {
+    const shuffled = shuffleQuestionOptions(sampleQ);
+
+    // 選択肢数は常に4
+    assert.equal(shuffled.options.length, 4);
+    assert.ok([0, 1, 2, 3].includes(shuffled.answerIndex));
+
+    // 正解のインデックスが指す選択肢は常に元の正解と一致する
+    assert.equal(shuffled.options[shuffled.answerIndex], originalCorrectOption);
+
+    // optionWords も正解インデックスと正しく対応している
+    if (originalCorrectWord && shuffled.optionWords) {
+      assert.equal(shuffled.optionWords[shuffled.answerIndex], originalCorrectWord);
+    }
+
+    observedAnswerIndices.add(shuffled.answerIndex);
+  }
+
+  // 50回試行すれば、正解位置（0, 1, 2, 3）が複数種類出現するはず（ランダム性確認）
+  assert.ok(observedAnswerIndices.size >= 2, 'shuffleQuestionOptions should produce varied answer positions');
+});

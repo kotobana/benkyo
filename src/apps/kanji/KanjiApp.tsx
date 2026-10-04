@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   ArrowLeft, 
   RotateCcw, 
@@ -10,10 +10,10 @@ import {
   ChevronRight, 
   Eye, 
   BookOpen, 
-  HelpCircle,
-  Award
+  HelpCircle
 } from 'lucide-react';
 import type { KanjiQuestion, QuizMode, QuestionResult } from './types';
+import { shuffleQuestionOptions } from './utils';
 import kanjiRawList from './data.json';
 
 type Props = {
@@ -56,8 +56,12 @@ export function KanjiApp({ onBack }: Props) {
   const [wrongPool, setWrongPool] = useState<KanjiQuestion[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
+  // 最新の wrongPool を保持する Ref（startQuiz の依存配列から wrongPool を外すため）
+  const wrongPoolRef = useRef<KanjiQuestion[]>([]);
+  wrongPoolRef.current = wrongPool;
+
   // Initialize or restart quiz
-  const startQuiz = useCallback((selectedMode: QuizMode, initialWrongPool = wrongPool) => {
+  const startQuiz = useCallback((selectedMode: QuizMode) => {
     setMode(selectedMode);
     setCurrentIndex(0);
     setSelectedIndex(null);
@@ -66,23 +70,27 @@ export function KanjiApp({ onBack }: Props) {
 
     let pool: KanjiQuestion[] = [];
     if (selectedMode === 'mistakes') {
-      if (initialWrongPool.length === 0) {
+      const currentWrongs = wrongPoolRef.current;
+      if (currentWrongs.length === 0) {
         alert('現在、間違えた問題の履歴はありません。全問からランダムに出題します。');
         pool = [...QUESTIONS_DATA];
       } else {
-        pool = [...initialWrongPool];
+        pool = [...currentWrongs];
       }
     } else {
       pool = [...QUESTIONS_DATA];
     }
 
-    // Shuffle pool
+    // Shuffle question order
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
     const selected = selectedMode === 'ten' ? shuffled.slice(0, 10) : shuffled;
-    setQuestionList(selected);
-  }, [wrongPool]);
 
-  // Initial load
+    // 4つの選択肢の並び順を毎回ランダムにシャッフル
+    const randomizedQuestions = selected.map(q => shuffleQuestionOptions(q));
+    setQuestionList(randomizedQuestions);
+  }, []);
+
+  // Initial load（1回のみ実行）
   useEffect(() => {
     startQuiz('ten');
   }, [startQuiz]);
@@ -93,13 +101,14 @@ export function KanjiApp({ onBack }: Props) {
   const handleSelectOption = (idx: number) => {
     if (selectedIndex !== null || !currentQ) return;
     setSelectedIndex(idx);
-    setShowAnswer(true);
 
     const isCorrect = idx === currentQ.answerIndex;
     if (isCorrect) {
       setStreak(s => s + 1);
+      setShowAnswer(true); // 正解のときは正解表示
     } else {
       setStreak(0);
+      setShowAnswer(false); // 不正解のときは最初は回答を伏せておく
       setWrongPool(prev => {
         if (!prev.some(q => q.id === currentQ.id)) {
           return [...prev, currentQ];
@@ -119,7 +128,7 @@ export function KanjiApp({ onBack }: Props) {
   };
 
   // Next Question
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (mode === 'ten' && currentIndex + 1 >= questionList.length) {
       setIsFinished(true);
       return;
@@ -129,14 +138,16 @@ export function KanjiApp({ onBack }: Props) {
       setSelectedIndex(null);
       setShowAnswer(false);
     } else {
-      // In endless mode, loop or add more
-      const reshuffled = [...QUESTIONS_DATA].sort(() => Math.random() - 0.5);
+      // In endless mode, loop or add more with randomized choices
+      const reshuffled = [...QUESTIONS_DATA]
+        .sort(() => Math.random() - 0.5)
+        .map(q => shuffleQuestionOptions(q));
       setQuestionList(reshuffled);
       setCurrentIndex(0);
       setSelectedIndex(null);
       setShowAnswer(false);
     }
-  };
+  }, [mode, currentIndex, questionList.length]);
 
   // Keyboard shortcut (Space / Enter for Next)
   useEffect(() => {
@@ -268,16 +279,17 @@ export function KanjiApp({ onBack }: Props) {
             {/* Choices Grid */}
             <div className="choices-grid">
               {currentQ.options.map((optionText, idx) => {
+                const isAnswered = selectedIndex !== null;
                 const isSelected = selectedIndex === idx;
                 const isCorrect = idx === currentQ.answerIndex;
                 let btnStateClass = '';
 
-                if (selectedIndex !== null) {
+                if (isAnswered) {
                   if (isSelected && isCorrect) {
                     btnStateClass = 'correct-choice';
                   } else if (isSelected && !isCorrect) {
                     btnStateClass = 'wrong-choice';
-                  } else if (isCorrect) {
+                  } else if (isCorrect && showAnswer) {
                     btnStateClass = 'reveal-correct-choice';
                   } else {
                     btnStateClass = 'dimmed-choice';
@@ -288,18 +300,18 @@ export function KanjiApp({ onBack }: Props) {
                   <button
                     key={idx}
                     className={`choice-card ${btnStateClass}`}
-                    disabled={selectedIndex !== null}
+                    disabled={isAnswered}
                     onClick={() => handleSelectOption(idx)}
                   >
                     <span className="choice-number">{CHOICE_LABELS[idx]}</span>
                     <span className="choice-text">{renderSentenceWithHighlight(optionText)}</span>
-                    {selectedIndex !== null && isSelected && isCorrect && (
+                    {isAnswered && isSelected && isCorrect && (
                       <CheckCircle2 className="choice-status-icon correct" size={20} />
                     )}
-                    {selectedIndex !== null && isSelected && !isCorrect && (
+                    {isAnswered && isSelected && !isCorrect && (
                       <XCircle className="choice-status-icon wrong" size={20} />
                     )}
-                    {selectedIndex !== null && !isSelected && isCorrect && (
+                    {isAnswered && !isSelected && isCorrect && showAnswer && (
                       <span className="choice-correct-tag">正解</span>
                     )}
                   </button>
@@ -318,20 +330,27 @@ export function KanjiApp({ onBack }: Props) {
                       </span>
                     ) : (
                       <span className="answer-badge wrong">
-                        <XCircle size={16} /> 不正解
+                        <XCircle size={16} /> 違っています（不正解）
                       </span>
                     )}
-                    <span className="answer-kanji-display">
-                      問題の漢字: <strong>{currentQ.kanji}</strong>
-                      {currentQ.answerWord && <small>（{currentQ.answerWord}）</small>}
-                    </span>
+
+                    {showAnswer ? (
+                      <span className="answer-kanji-display">
+                        問題の漢字: <strong>{currentQ.kanji}</strong>
+                        {currentQ.answerWord && <small>（{currentQ.answerWord}）</small>}
+                      </span>
+                    ) : (
+                      <span className="answer-kanji-display muted-prompt">
+                        ※回答を確認したい場合はボタンを押してください
+                      </span>
+                    )}
                   </div>
 
                   <button
-                    className="toggle-words-btn"
+                    className={`toggle-words-btn ${!showAnswer ? 'highlight-open' : ''}`}
                     onClick={() => setShowAnswer(!showAnswer)}
                   >
-                    <Eye size={14} /> {showAnswer ? '解説を閉じる' : '各選択肢の漢字を見る'}
+                    <Eye size={14} /> {showAnswer ? '回答を隠す' : '正解と解説を見る'}
                   </button>
                 </div>
 
