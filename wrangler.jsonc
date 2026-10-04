@@ -16,5 +16,8 @@
       "database_id": "c23b54d4-dd92-458e-a6cb-28854095f293",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  "triggers": {
+    "crons": ["0 21 * * *"]
+  }
 }

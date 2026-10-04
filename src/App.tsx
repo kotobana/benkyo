@@ -16,7 +16,8 @@ import {
   ChevronRight,
   Compass,
   Presentation,
-  Gamepad2
+  Gamepad2,
+  MapPin
 } from 'lucide-react';
 import { groups, type Category, type SchoolLink, validLink } from './model';
 
@@ -28,14 +29,19 @@ const SouzouApp = React.lazy(() =>
   import('./apps/souzou/SouzouApp').then(m => ({ default: m.SouzouApp }))
 );
 
+const ShinroApp = React.lazy(() => 
+  import('./apps/shinro/ShinroApp').then(m => ({ default: m.ShinroApp }))
+);
+
 const STORAGE_KEY = 'benkyo_passphrase';
 
-export type ViewState = 'portal' | 'kanji' | 'souzou';
+export type ViewState = 'portal' | 'kanji' | 'souzou' | 'shinro';
 
 function getHashView(): ViewState {
   const hash = window.location.hash;
   if (hash === '#kanji') return 'kanji';
   if (hash.startsWith('#souzou')) return 'souzou';
+  if (hash.startsWith('#shinro')) return 'shinro';
   return 'portal';
 }
 
@@ -66,6 +72,7 @@ export function App() {
     setView(newView);
     if (newView === 'kanji') window.location.hash = '#kanji';
     else if (newView === 'souzou') window.location.hash = '#souzou';
+    else if (newView === 'shinro') window.location.hash = '#shinro';
     else window.location.hash = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -226,6 +233,45 @@ export function App() {
     );
   }
 
+  if (view === 'shinro') {
+    return (
+      <div className="space-shell">
+        <header>
+          <div className="brand" style={{ cursor: 'pointer' }} onClick={() => navigateTo('portal')}>
+            <GraduationCap size={24} />
+            <span>benkyo</span>
+            <small>無料塾のツールホーム</small>
+          </div>
+          <div className="auth-controls">
+            {passphrase ? (
+              <span className="auth-status unlocked">
+                <Unlock size={12} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                管理者モード
+              </span>
+            ) : (
+              <button className="quiet" onClick={() => { setAuthInput(''); setAuthError(''); setShowAuthModal(true); }}>
+                <Key size={13} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                管理者ログイン
+              </button>
+            )}
+            <button className="quiet" onClick={() => navigateTo('portal')}>
+              ホームへ戻る
+            </button>
+          </div>
+        </header>
+
+        <React.Suspense fallback={<div className="loading-box" style={{ padding: '40px', textAlign: 'center' }}>進路＆奨学金ナビを読み込み中…</div>}>
+          <ShinroApp onBackToPortal={() => navigateTo('portal')} passphrase={passphrase} />
+        </React.Suspense>
+
+        <footer>
+          <span>benkyo - 相模原・橋本 高校入試＆奨学金ナビ</span>
+          <small>誰でも利用可能（相模原・橋本地域特化）</small>
+        </footer>
+      </div>
+    );
+  }
+
   // Main Portal View
   return (
     <div className="space-shell">
@@ -292,6 +338,34 @@ export function App() {
             </div>
 
             <div className="app-cards-grid">
+              {/* Featured: Sagamihara Hashimoto Shinro & Scholarship Navigator */}
+              <div className="app-card featured" style={{ borderLeft: '4px solid #2563eb' }}>
+                <div>
+                  <div className="app-card-top">
+                    <div className="app-card-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
+                      <MapPin size={26} />
+                    </div>
+                    <div className="app-card-title-group">
+                      <span className="badge-tag" style={{ background: '#dbeafe', color: '#1e40af' }}>
+                        毎朝6:00自動更新 / 相模原・橋本特化
+                      </span>
+                      <h3>相模原・橋本 高校入試＆奨学金ナビ</h3>
+                    </div>
+                  </div>
+                  <p>
+                    橋本周辺の中学生・保護者向け進路・支援情報！<br />
+                    相原・橋本高校など通学圏内の「説明会予約締切」や、神奈川県・相模原市の「返還不要な給付金・就学支援」を日次で自動集約。
+                    今日・今週やるべき手続きがひと目でわかります。
+                  </p>
+                </div>
+                <div className="app-card-footer">
+                  <span className="app-card-meta">締切アラート / 奨学金3分解説 / 高校一覧 / 公式速報</span>
+                  <button className="app-launch-btn" style={{ background: '#2563eb' }} onClick={() => navigateTo('shinro')}>
+                    ナビを開く <ChevronRight size={15} />
+                  </button>
+                </div>
+              </div>
+
               {/* Featured: Souzou Learning Workshop */}
               <div className="app-card featured" style={{ borderLeft: '4px solid #f38b43' }}>
                 <div>
