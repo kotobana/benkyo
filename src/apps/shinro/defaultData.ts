@@ -176,17 +176,17 @@ export const DEFAULT_EVENTS: CalendarEvent[] = [
   {
     id: 1,
     school_id: 'aihara',
-    title: '第2回 学校説明会・施設見学（橋本駅）',
+    title: '第2回 学校説明会・施設見学 事前Web予約（橋本駅）',
     category: 'briefing',
     event_date: '2026-10-18',
-    deadline_date: '2026-10-06',
+    deadline_date: '2026-10-09',
     url: 'https://www.pen-kanagawa.ed.jp/aihara-h/nyushi/setsumeikai.html',
     note: '公式Webにて先着事前予約制。4学科（農業・土木・食品・ビジネス）の個別相談あり。'
   },
   {
     id: 2,
     school_id: 'hashimoto',
-    title: '秋の学校説明会・授業見学',
+    title: '秋の学校説明会・授業見学 Web受付',
     category: 'briefing',
     event_date: '2026-10-24',
     deadline_date: '2026-10-15',
@@ -220,7 +220,7 @@ export const DEFAULT_EVENTS: CalendarEvent[] = [
     category: 'scholarship',
     event_date: '2026-10-30',
     deadline_date: '2026-10-30',
-    url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1026600/1005230.html',
+    url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1006889/index.html',
     note: '中学校の担任の先生を通じて必要書類を提出。'
   },
   {
@@ -228,9 +228,9 @@ export const DEFAULT_EVENTS: CalendarEvent[] = [
     school_id: null,
     title: '神奈川県公立高校 出願期間（インターネット出願）',
     category: 'exam',
-    event_date: '2027-01-28',
-    deadline_date: '2027-02-01',
-    url: 'https://www.pref.kanagawa.jp/docs/u5t/cnt/f6892/index.html',
+    event_date: '2027-01-25',
+    deadline_date: '2027-01-29',
+    url: 'https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/index.html',
     note: '全県共通の公立高校出願期間。'
   },
   {
@@ -240,7 +240,7 @@ export const DEFAULT_EVENTS: CalendarEvent[] = [
     category: 'exam',
     event_date: '2027-02-16',
     deadline_date: '2027-02-16',
-    url: 'https://www.pref.kanagawa.jp/docs/u5t/cnt/f6892/index.html',
+    url: 'https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/index.html',
     note: '共通選抜の学力検査日。全日制共通。'
   }
 ];
@@ -249,28 +249,46 @@ export const DEFAULT_NEWS: DailyNewsItem[] = [
   {
     id: 1,
     source_name: '神奈川県教育委員会',
-    title: '令和9年度（2027年度）公立高等学校入学者選抜の選考基準等を公表しました',
-    summary: '相原高校・橋本高校を含む各県立高校の内申点・学力検査・面接比率が正式発表されました。普通科・実業科ともに基本比率をご確認ください。',
-    published_date: '2026-10-02',
-    original_url: 'https://www.pref.kanagawa.jp/docs/u5t/cnt/f6892/index.html',
+    title: '【10月説明会】県立高校（相原・橋本・相模原弥栄など）の秋季学校説明会Web予約が各校で受付中',
+    summary: '10月中旬〜下旬に開催される各高校の学校説明会・見学会（e-kanagawa電子申請等による先着予約）の受付が始まっています。定員になり次第終了するため、志望校の公式HPから早めの予約をおすすめします。',
+    published_date: '2026-10-06',
+    original_url: 'https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/index.html',
     is_approved: 1
   },
   {
     id: 2,
-    source_name: '相模原市',
-    title: '【中3保護者向け】令和9年度入学 相模原市育英奨学生の予約募集を開始しました',
-    summary: '高校進学後の修学を支援する相模原市の無利子貸与奨学金です。10月30日までに在学校（中学校）へ申請書を提出してください。',
-    published_date: '2026-09-28',
-    original_url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1026600/1005230.html',
+    source_name: '相原高校',
+    title: '【橋本駅徒歩】相原高校 第2回学校説明会（10/18開催）のWeb予約受付中',
+    summary: '農業・環境土木・食品科学・ビジネスの4学科説明および施設見学会。橋本駅徒歩12分のキャンパスにて開催されます。個別進路相談コーナーも設置されます。',
+    published_date: '2026-10-05',
+    original_url: 'https://www.pen-kanagawa.ed.jp/aihara-h/nyushi/setsumeikai.html',
     is_approved: 1
   },
   {
     id: 3,
+    source_name: '相模原市教育委員会',
+    title: '【返還不要】相模原市高校生向け奨学金（年間最大10万円）の随時申請について',
+    summary: '市民税所得割額0円の世帯を対象とした相模原市の給付型（返還不要）奨学金です。通常申請（7月）に間に合わなかった場合でも、2027年2月26日まで減額支給での随時申請が可能です。',
+    published_date: '2026-10-04',
+    original_url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1006889/index.html',
+    is_approved: 1
+  },
+  {
+    id: 4,
     source_name: '神奈川県教育委員会',
-    title: '県立高校の学校説明会日程一覧（10月・11月開催分）が更新されました',
-    summary: '相模原弥栄高校、上溝南高校、麻溝台高校などの説明会申し込みが始まっています。定員制の学校が多いため早めの予約を推奨します。',
-    published_date: '2026-09-25',
-    original_url: 'https://www.pref.kanagawa.jp/docs/u5t/cnt/f6892/index.html',
+    title: '令和9年度（2027年4月入学）公立高等学校入学者選抜の選考基準および日程発表',
+    summary: 'インターネット出願期間は令和9年1月25日〜1月29日、共通選抜学力検査（本番）は令和9年2月16日（火）、合格発表は2月26日（金）に実施されます。各校の内申点・学力検査比率をご確認ください。',
+    published_date: '2026-10-02',
+    original_url: 'https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/index.html',
+    is_approved: 1
+  },
+  {
+    id: 5,
+    source_name: '相模原市',
+    title: '【中3保護者向け】令和9年度入学 相模原市育英奨学生の予約募集は10月30日締切です',
+    summary: '高校進学後の修学を支援する相模原市の無利子貸与奨学金（月額1.5万〜2万円）です。10月30日までに在学校（中学校）へ申請書を提出してください。',
+    published_date: '2026-10-01',
+    original_url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1006889/index.html',
     is_approved: 1
   }
 ];

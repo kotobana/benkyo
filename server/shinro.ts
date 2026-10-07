@@ -108,26 +108,20 @@ export async function initShinroTables(db: DB): Promise<void> {
       }
     }
 
-    // カレンダーイベントが空なら初期シード
-    const evCount = await db.prepare('SELECT COUNT(*) as count FROM calendar_events').first<{ count: number }>();
-    if (!evCount || evCount.count === 0) {
-      for (const ev of DEFAULT_EVENTS) {
-        await db.prepare(`
-          INSERT OR REPLACE INTO calendar_events (id, school_id, title, category, event_date, deadline_date, url, note)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(ev.id, ev.school_id, ev.title, ev.category, ev.event_date, ev.deadline_date, ev.url || '', ev.note || '').run();
-      }
+    // カレンダーイベントの最新化
+    for (const ev of DEFAULT_EVENTS) {
+      await db.prepare(`
+        INSERT OR REPLACE INTO calendar_events (id, school_id, title, category, event_date, deadline_date, url, note)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(ev.id, ev.school_id, ev.title, ev.category, ev.event_date, ev.deadline_date, ev.url || '', ev.note || '').run();
     }
 
-    // ニュースが空なら初期シード
-    const newsCount = await db.prepare('SELECT COUNT(*) as count FROM daily_news').first<{ count: number }>();
-    if (!newsCount || newsCount.count === 0) {
-      for (const n of DEFAULT_NEWS) {
-        await db.prepare(`
-          INSERT OR REPLACE INTO daily_news (id, source_name, title, summary, published_date, original_url, is_approved)
-          VALUES (?, ?, ?, ?, ?, ?)
-        `).bind(n.id, n.source_name, n.title, n.summary, n.published_date, n.original_url, n.is_approved).run();
-      }
+    // 最新ニュースの同期
+    for (const n of DEFAULT_NEWS) {
+      await db.prepare(`
+        INSERT OR REPLACE INTO daily_news (id, source_name, title, summary, published_date, original_url, is_approved)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).bind(n.id, n.source_name, n.title, n.summary, n.published_date, n.original_url, n.is_approved).run();
     }
   } catch (err) {
     console.error('Failed to init shinro tables:', err);
@@ -303,11 +297,11 @@ export async function runScheduledCrawl(env: Env): Promise<{
   const TARGETS = [
     {
       source: '神奈川県教育委員会',
-      url: 'https://www.pref.kanagawa.jp/docs/u5t/cnt/f6892/index.html'
+      url: 'https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/index.html'
     },
     {
       source: '相模原市',
-      url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1026600/index.html'
+      url: 'https://www.city.sagamihara.kanagawa.jp/kosodate/1006889/index.html'
     }
   ];
 
